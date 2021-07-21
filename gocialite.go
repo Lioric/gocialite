@@ -43,6 +43,18 @@ func (d *Dispatcher) New(data ...string) *Gocial {
 	return g
 }
 
+func (d *Dispatcher) Extra(state string) (string, error) {
+	d.mu.RLock()
+	g, ok := d.g[state]
+	d.mu.RUnlock()
+	if !ok {
+		return "", fmt.Errorf("invalid CSRF token: %s", state)
+	}
+
+	data := g.Extra
+	return data, nil
+}
+
 // Handle callback. Can be called only once for given state.
 func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, string, error) {
 	d.mu.RLock()
