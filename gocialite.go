@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Lioric/gocialite/drivers"
+	"github.com/nLioric/gocialite/drivers"
 	"github.com/Lioric/gocialite/structs"
 	"golang.org/x/oauth2"
 	"gopkg.in/oleiade/reflections.v1"
@@ -44,18 +44,19 @@ func (d *Dispatcher) New(data ...string) *Gocial {
 }
 
 // Handle callback. Can be called only once for given state.
-func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, error) {
+func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, string, error) {
 	d.mu.RLock()
 	g, ok := d.g[state]
 	d.mu.RUnlock()
 	if !ok {
-		return nil, nil, fmt.Errorf("invalid CSRF token: %s", state)
+		return nil, nil, "", fmt.Errorf("invalid CSRF token: %s", state)
 	}
+	extra := g.Extra
 	err := g.Handle(state, code)
 	d.mu.Lock()
 	delete(d.g, state)
 	d.mu.Unlock()
-	return &g.User, g.Token, err
+	return &g.User, g.Token, extra, err
 }
 
 // Gocial is the main struct of the package
