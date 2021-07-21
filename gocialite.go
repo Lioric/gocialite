@@ -29,12 +29,17 @@ func NewDispatcher() *Dispatcher {
 }
 
 // New Gocial instance
-func (d *Dispatcher) New() *Gocial {
+func (d *Dispatcher) New(data ...string) *Gocial {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	state := randToken()
 	g := &Gocial{state: state}
 	d.g[state] = g
+
+	if len(data) > 0 {
+		g.Extra = data[0]
+	}
+
 	return g
 }
 
@@ -60,6 +65,7 @@ type Gocial struct {
 	conf          *oauth2.Config
 	User          structs.User
 	Token         *oauth2.Token
+	Extra	string
 }
 
 func init() {
@@ -231,7 +237,7 @@ func jsonDecode(js []byte) (map[string]interface{}, error) {
 	if err := decoder.Decode(&decoded); err != nil {
 		return nil, err
 	}
-	
+
 	return decoded, nil
 }
 
