@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nLioric/gocialite/drivers"
+	"github.com/Lioric/gocialite/drivers"
 	"github.com/Lioric/gocialite/structs"
 	"golang.org/x/oauth2"
 	"gopkg.in/oleiade/reflections.v1"
