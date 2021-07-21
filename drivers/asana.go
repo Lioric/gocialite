@@ -4,7 +4,7 @@ import (
 	"net/http"
   "fmt"
 
-	"github.com/danilopolani/gocialite/structs"
+	"github.com/Lioric/gocialite/structs"
 	"golang.org/x/oauth2"
 )
 
@@ -37,7 +37,7 @@ var AsanaUserFn = func(client *http.Client, u *structs.User) {
   u.FullName = userData["name"].(string)
 
 	// Set avatar
-  if (userData["photo"] != nil) { 
+  if (userData["photo"] != nil) {
 	 u.Avatar = userData["photo"].(map[string]interface{})["image_1024x1024"].(string)
   }
 }
